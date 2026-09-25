@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NTYDO — Independent Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Arabic:wght@400;600&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+  :root {
+    --sans: 'Roboto', ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+    --serif: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+    --mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+    --ar: 'Noto Sans Arabic', sans-serif;
+    --jp: 'Noto Sans JP', sans-serif;
+
+    /* Fixed black ground, faded white ink — brand constant, no light/dark switch */
+    --bg: #000000;
+    --ink: rgba(255,255,255,0.86);
+    --muted: rgba(255,255,255,0.42);
+    --line: rgba(255,255,255,0.14);
+    --line-strong: rgba(255,255,255,0.5);
+
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  html, body { height: 100%; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; }
+  .frame { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+
+  header.titleblock {
+    border-bottom: 2px solid var(--line-strong);
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    background: var(--bg);
+    z-index: 10;
+  }
+  .titleblock-inner {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    flex-wrap: wrap;
+  }
+  .wordmark {
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.01em;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .wordmark sup { font-size: 0.5em; font-weight: 500; opacity: 0.6; }
+  .wordmark .jp { font-family: var(--jp); font-weight: 700; font-size: 0.85em; }
+  .wordmark .div { color: var(--muted); font-weight: 400; }
+  .wordmark .en { font-weight: 400; color: var(--muted); }
+  .wordmark .ar { font-family: var(--ar); font-weight: 600; font-size: 0.95em; direction: rtl; }
+
+  nav.meta {
+    display: flex;
+    gap: 20px;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  nav.meta b { color: var(--ink); font-weight: 500; }
+  @media (max-width: 640px) { nav.meta { display: none; } }
+
+  .hero { margin: 64px 0 40px; }
+
+  .headline {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 16px;
+    line-height: 0.98;
+    margin: 0 0 8px;
+  }
+  .headline span { display: inline-block; }
+
+  .w1 { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(2.4rem, 8vw, 5.2rem); }
+  .w2 { font-family: var(--sans); font-weight: 700; font-size: clamp(1.1rem, 2.6vw, 1.6rem); text-transform: uppercase; letter-spacing: 0.02em; align-self: center; }
+  .w3 { font-family: var(--sans); font-weight: 300; font-size: clamp(2.8rem, 9vw, 6.4rem); }
+  .w4 { font-family: var(--mono); font-weight: 500; font-size: clamp(0.9rem, 1.8vw, 1.1rem); color: var(--muted); align-self: center; }
+  .w5 { font-family: var(--jp); font-weight: 700; font-size: clamp(1.8rem, 5vw, 3.2rem); align-self: center; }
+  .w6 { font-family: var(--ar); font-weight: 600; font-size: clamp(1.6rem, 4.4vw, 2.8rem); direction: rtl; align-self: center; }
+
+  .hero-sub {
+    margin: 18px 0 0;
+    max-width: 58ch;
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .viewport {
+    margin: 44px 0 8px;
+    border: 2px solid var(--line-strong);
+    position: relative;
+  }
+  .viewport-canvas { display: block; width: 100%; height: 44vh; min-height: 280px; max-height: 420px; }
+  .viewport-menu {
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 2px solid var(--line-strong);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+  .viewport-menu a {
+    flex: 1;
+    text-align: center;
+    padding: 12px 10px;
+    color: var(--muted);
+    text-decoration: none;
+    border-right: 1px solid var(--line);
+    transition: color 0.15s ease;
+  }
+  .viewport-menu a:last-child { border-right: none; }
+  .viewport-menu a:hover,
+  .viewport-menu a:focus-visible { color: var(--ink); }
+  .viewport-menu a::before { content: "[ "; opacity: 0.5; }
+  .viewport-menu a::after { content: " ]"; opacity: 0.5; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin: 72px 0 22px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--line-strong);
+  }
+  .section-head h2 {
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    margin: 0;
+  }
+  .section-head .jp { font-family: var(--jp); font-weight: 700; font-size: 1.1rem; color: var(--muted); }
+  .section-head .count { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+
+  .ascii-portrait {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: clamp(0.34rem, 0.95vw, 0.62rem);
+    line-height: 1.05;
+    letter-spacing: 0;
+    color: var(--ink);
+    white-space: pre;
+    text-align: center;
+  }
+
+  .transitions-panel {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--line-strong);
+    padding: 28px 16px;
+  }
+
+  .scan {
+    position: absolute;
+    left: 0; right: 0;
+    height: 18%;
+    background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.10), transparent);
+    animation: scan 6s linear infinite;
+    pointer-events: none;
+  }
+  @keyframes scan {
+    0%   { top: -20%; }
+    100% { top: 110%; }
+  }
+
+  .glitch-char {
+    display: inline-block;
+    animation: glitchFlicker 2.6s steps(1) infinite;
+  }
+  @keyframes glitchFlicker {
+    0%, 92%, 100% { opacity: 1; }
+    93% { opacity: 0.15; }
+    94% { opacity: 1; }
+    95% { opacity: 0.3; }
+    96% { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scan { animation: none; display: none; }
+    .glitch-char { animation: none; }
+  }
+
+  @media (max-width: 640px) {
+    .transitions-panel { padding: 16px; }
+    .ascii-portrait { font-size: 0.26rem; }
+  }
+
+  .transitions-caption {
+    margin: 18px 0 0;
+    max-width: 60ch;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  .specimens {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    background: var(--line-strong);
+    border: 2px solid var(--line-strong);
+  }
+  .specimen { background: var(--bg); display: flex; flex-direction: column; }
+  .specimen canvas { display: block; width: 100%; height: 190px; }
+  .specimen-info { padding: 14px 16px 18px; }
+  .specimen-id { font-family: var(--mono); font-size: 0.68rem; color: var(--muted); display: block; margin-bottom: 6px; }
+  .specimen-name { font-weight: 600; font-size: 0.95rem; margin: 0 0 6px; }
+  .specimen-name .accent { font-family: var(--ar); font-weight: 600; direction: rtl; unicode-bidi: isolate; margin-left: 6px; }
+  .specimen-desc { color: var(--muted); font-size: 0.83rem; line-height: 1.5; margin: 0; }
+
+  .dispatch {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 56px;
+    padding: 56px 0 24px;
+  }
+  .ascii {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    letter-spacing: 0.18em;
+    color: var(--muted);
+    white-space: pre;
+  }
+  .dispatch-kicker { font-family: var(--mono); font-size: 0.72rem; color: var(--muted); margin: 0 0 10px; }
+  .dispatch-title { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(1.5rem, 3.4vw, 2.1rem); margin: 0 0 12px; }
+  .dispatch-desc { margin: 0 0 14px; color: var(--muted); font-size: 0.92rem; line-height: 1.6; max-width: 46ch; }
+  .dispatch-link { font-family: var(--mono); font-size: 0.8rem; text-decoration: underline; text-underline-offset: 4px; }
+  @media (max-width: 640px) {
+    .dispatch { grid-template-columns: 1fr; gap: 28px; text-align: left; }
+  }
+
+  .tagline {
+    margin: 0 0 28px;
+    max-width: 68ch;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--muted);
+  }
+
+  .focus-block {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 40px;
+    align-items: start;
+  }
+  .focus-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line);
+  }
+  .focus-list li {
+    padding: 11px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 0.92rem;
+  }
+  .philosophy {
+    margin: 0;
+    padding: 0 0 0 18px;
+    border-left: 2px solid var(--line-strong);
+  }
+  .philosophy p {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+    line-height: 1.5;
+    margin: 0 0 14px;
+    color: var(--ink);
+  }
+  .philosophy p:last-child { margin-bottom: 0; }
+
+  .status-box {
+    margin: 0;
+    padding: 18px 0;
+    font-family: var(--mono);
+    font-size: clamp(0.6rem, 1.5vw, 0.85rem);
+    line-height: 1.6;
+    color: var(--ink);
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  @media (max-width: 640px) {
+    .focus-block { grid-template-columns: 1fr; gap: 28px; }
+    .status-box { font-size: 0.52rem; }
+  }
+
+  .notes {
+    margin-top: 72px;
+    padding: 20px 0;
+    border-top: 2px solid var(--line-strong);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .notes h3 { font-family: var(--mono); font-size: 0.7rem; font-weight: 500; color: var(--muted); margin: 0 0 8px; }
+  .notes p { margin: 0; font-size: 0.85rem; line-height: 1.6; }
+  .notes code { font-family: var(--mono); font-size: 0.82em; border: 1px solid var(--line); padding: 1px 5px; }
+
+  footer { margin-top: 64px; border-top: 2px solid var(--line-strong); padding: 22px 0 calc(28px + env(safe-area-inset-bottom, 0px)); }
+  .footer-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+  .footer-row .legal strong { color: var(--ink); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header class="titleblock">
+  <div class="frame titleblock-inner">
+    <div class="wordmark">
+      <span>NTYDO<sup>™</sup></span>
+      <span class="jp">独立</span>
+      <span class="div">/</span>
+      <span class="en">Independent Research</span>
+      <span class="ar">مستقل</span>
+    </div>
+    <nav class="meta">
+      <span>DOC <b>THREE-JS-INDEX</b></span>
+      <span>REV <b>2026.B</b></span>
+      <span>HOST <b>GH-PAGES</b></span>
+    </nav>
+  </div>
+</header>
+
+<main class="frame">
+
+  <section class="hero">
+    <h1 class="headline">
+      <span class="w1">spatial</span>
+      <span class="w2">index of</span>
+      <span class="w3">experiments</span>
+      <span class="w4">v.2026</span>
+      <span class="w5">研究</span>
+      <span class="w6">بحث</span>
+    </h1>
+    <p class="hero-sub">Small, self-contained three.js sketches, catalogued the way a lab keeps specimens — one geometry, one idea, one page. Built to sit directly on GitHub Pages, no build step, no colour.</p>
+  </section>
+
+  <section class="viewport">
+    <canvas id="hero-canvas" class="viewport-canvas"></canvas>
+    <nav class="viewport-menu">
+      <a href="#transitions">TRANSITIONS</a>
+      <a href="#dispatch">DISPATCH</a>
+      <a href="#focus">FOCUS</a>
+      <a href="#status">STATUS</a>
+    </nav>
+  </section>
+
+  <div class="section-head" id="transitions">
+    <h2>Transitions</h2>
+    <span class="jp">遷移</span>
+    <span class="count">n → n−1</span>
+  </div>
+
+  <div class="transitions-panel">
+    <pre id="ascii-portrait" class="ascii-portrait" aria-label="ASCII rendering of a foil-wrapped figure"></pre>
+    <span class="scan" aria-hidden="true"></span>
+  </div>
+  <p class="transitions-caption">Source frame, resampled to a character grid — the loop lives in the glitch, not the pixels.</p>
+
+  <div class="section-head" id="dispatch">
+    <h2>Dispatch</h2>
+    <span class="jp">記事</span>
+    <span class="count">EXTERNAL</span>
+  </div>
+
+  <div class="dispatch">
+    <pre class="ascii" aria-hidden="true">
+.   .   .   .   .   .   .
+    .   o   o   o   .
+.   o   o   *   o   o   .
+    .   o   o   o   .
+.   .   .   .   .   .   .
+    </pre>
+    <div class="dispatch-text">
+      <p class="dispatch-kicker">reading now</p>
+      <h3 class="dispatch-title">Beyond Nucloidal, 1e-18</h3>
+      <p class="dispatch-desc">Notes from the NTYDO notebook — the full piece, with its own figures, lives on Substack.</p>
+      <a class="dispatch-link" href="https://ntydo.substack.com/p/beyond-nucloidal-1e-18">ntydo.substack.com/p/beyond-nucloidal-1e-18</a>
+    </div>
+  </div>
+
+  <div class="section-head" id="focus">
+    <h2>Focus</h2>
+    <span class="jp">重点</span>
+    <span class="count">08 AREAS</span>
+  </div>
+
+  <p class="tagline">Singularity Resources Computing — adaptive post-silicon infrastructure, autonomous machine-native systems, experimental compute architectures for next-generation intelligence environments.</p>
+
+  <div class="focus-block">
+    <ul class="focus-list">
+      <li>Autonomous Compute Systems</li>
+      <li>Native AI Infrastructure</li>
+      <li>Distributed Resource Orchestration</li>
+      <li>Experimental Physics-Inspired Computing</li>
+      <li>Digital Twins &amp; Computational Simulation</li>
+      <li>Advanced Serialization Engines</li>
+      <li>Chip-to-Chip Communication</li>
+      <li>Open Research Tooling</li>
+    </ul>
+    <blockquote class="philosophy">
+      <p>Build systems that scale beyond traditional software boundaries.</p>
+      <p>Compute is not a resource.<br>Compute is an ecosystem.</p>
+    </blockquote>
+  </div>
+
+  <div class="section-head" id="status">
+    <h2>Status</h2>
+    <span class="jp">状態</span>
+    <span class="count">ONLINE</span>
+  </div>
+
+  <pre class="status-box">┌──────────────────────────────────────────────────────┐
+│ &gt; SELF AI ORIENTED COMPUTE ENABLEMENT                 │
+│ &gt; MATRIX FIELD / DEEP SYSTEMS / SIGNAL PROCESSING     │
+│ &gt; AUTONOMOUS RESOURCE ORCHESTRATION                   │
+│ &gt; POST-SILICON INFRASTRUCTURE                         │
+│ &gt; STATUS : ONLINE                                     │
+└──────────────────────────────────────────────────────┘</pre>
+
+  <div class="notes">
+    <div>
+      <h3>on hosting</h3>
+      <p>Each specimen can live at its own path — <code>/specimens/torus-knot/</code> — and this page just links out, keeping the index page light.</p>
+    </div>
+    <div>
+      <h3>on gifs &amp; video</h3>
+      <p>This preview can't load remote images, so the loops above are live WebGL. On the real GitHub Pages repo, drop self-hosted <code>.mp4</code>/<code>.webm</code> loops (or Giphy embeds) straight into each card.</p>
+    </div>
+    <div>
+      <h3>on structure</h3>
+      <p>One <code>index.html</code>, one <code>/specimens</code> folder per sketch, three.js loaded from a CDN <code>&lt;script&gt;</code> tag — nothing to build or bundle.</p>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="frame footer-row">
+    <span class="legal"><strong>NTYDO™</strong> Independent Research — © 2026 Emmanuel Díaz Ortega. All Rights Reserved.</span>
+    <span>index.html · three.js r128 · deployed via GitHub Pages</span>
+  </div>
+</footer>
+
+<script>
+(function() {
+  if (typeof THREE === 'undefined') return;
+
+  function makeScene(canvas, build, opts) {
+    opts = opts || {};
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+    var scene = new THREE.Scene();
+    var camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+    camera.position.set(0, 0, opts.dist || 5);
+
+    var group = new THREE.Group();
+    build(scene, group);
+    scene.add(group);
+
+    function resize() {
+      var w = canvas.clientWidth, h = canvas.clientHeight;
+      if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    new ResizeObserver(resize).observe(canvas);
+    resize();
+
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var angle = 0;
+
+    function tick() {
+      if (!reduced) {
+        group.rotation.y += 0.006;
+        group.rotation.x += 0.0025;
+        angle += 0.006;
+      }
+      if (opts.onTick) opts.onTick(angle);
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+    tick();
+  }
+
+  function inkColor() {
+    var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return dark ? 0xFFFFFF : 0x000000;
+  }
+
+  var heroCanvas = document.getElementById('hero-canvas');
+  if (heroCanvas) {
+    makeScene(heroCanvas, function(scene, group) {
+      var mat = new THREE.MeshBasicMaterial({ color: inkColor(), wireframe: true });
+      group.add(new THREE.Mesh(new THREE.IcosahedronGeometry(1.6, 1), mat));
+      var mat2 = new THREE.MeshBasicMaterial({ color: inkColor(), wireframe: true, transparent: true, opacity: 0.5 });
+      group.add(new THREE.Mesh(new THREE.IcosahedronGeometry(0.55, 0), mat2));
+    }, { dist: 5 });
+  }
+
+  // ASCII portrait — resampled from the uploaded frame
+  var asciiArt = `                                   .               .-=-:...                                 
+                                .-=-         .:-=+*#####***#-                               
+                               -=-: .::-=-+--++******#*#*=-#@*.                             
+                              --==++**###*+:.-++======++--:=#%*.                            
+                             :*******##++*=:=:==----=++=--..=***.                           
+                           .==*+**##*-:=*+-.-.:=-+*###*-....:++*=                           
+                           *==+*#%#*=+*#*=: .-::==+++=-:.::.:=*+=-                          
+                          :*-+*#*+=+#%**+=:.   .:...::....:====-+#                          
+                          -+.-=-::-*#***==..  ..   .--....===-.::+.                         
+                          --:.. .:=#***+==...     :.-+-:. -=-::--==                         
+                          .:-.::  :****+-+....  .:..:-----::..:=-+=-                        
+                           --. -- -****===...----:..:-::--==..---**+.                       
+                           :=. .--=****-+-...-=---:-----.-*=::-.-+%=                        
+                           :=:. .:+***+-*-...----+- ::..:::=-::.:==                         
+                           :=:.  .+***=-*::.:--==*+: :+::: ::...=+                          
+                           .=:-  .+**+--*::.===++**=..--::  .:.:+=                          
+                           .=:-...***+-=#...----*#%+-.::::  .:.=+-                          
+                           :+:=: .**+=-+#...:...-=+-=::.... :.=*=.                          
+                          .*=:-...**+--**.....   .:..:....- ..=+=.                          
+                    ..---+**=::::.#*+-=*#....     .....  .. :--*++.                         
+                .:--++*+==-=-:::..#*=-+#+ ....    ..:.  .::.::-+=#*+-        ..:::::-::::===
+             ..--=+*++*=:.:=-:...:#*=-**......     ..   .==..::++#*#%#+=--=++++++*+++===---:
+          .-=---=+++=-:.. :-:...::#+-=#-.....     ..   ..=:.. .+*+**#%@%*+=--:. ..          
+        .-==--::-:........::.:::::*+-+=.....    .......:.: ..  =*##++##*:::     .....  .    
+      .--:::::::..........::.:::::*=-+::...:   .::...:...=+. ..-+=+-.:==-=+=:::..::.....    
+  .:==:..:---:.......... .-..:.:::*--::.:-.:  .:::.......=*+. .:=-:.     :::..             .
+-=++*#*+:     .......... .-..-::::+--:::==.:.:::::::.::....-=:  :+==.                       
+--=+##+-:. .           .:::::=--::+--::+=-....:::::::---:-..:::. -====:.                    
+=+**+: .--:...    ..::-------==--:==::++=-....:::--:::-:.--.:==-..-+-..::.                  
++++-.:=***++==-...=+=-------=++=-:=--=**#:..:.::::::::---:-::==-...-=:                      
+==-=++++=-::=+=:..=-::::::::=+=-=:=*+**#=...::.::::::---=-:::-=.::..:::..                   
+=++==--::::-====--::::::::..-+===-+*+===:..:::...::.:::--:-::=: -:........:.... ............
+=--:--::.:--===---:::::::::::++-:=+=----=..:....:...:::::::.-= .-:. ...::.... ......:::-.:: 
+:::---:.::-----::--::::::::::++:.:+:....--..::::... ...::. :=: :-:..:..........    .   .:.  
+-:::::..:----:::::::::::---:::=-::+..  . -- .::: :. .-=+: .=-. :=-:..   ...  ..:.. ... .    
+:::::-:::::-:.:::::::::-----==----+.:::...-.   ..::-++*+. :.   -=-:.       .    .:::....    
+::.:::.::---::-:::::::-----===+=-==..-==:.:-....-++==++= ..    =+-:.              ..::....  
+......:----::::::::::---------:::=:   .=+-:--::.:++++++=: :.. :-*=....               ..:::..
+.....:---:::::::::------:::::::::=...:::-=+#*::.:+**=++=. .. :+++=:.:::.....            .:::
+-----:::::::--::-----::..::::::::-:---:::::+#-:::=++-++-. .::=*=-=..:::.........           .
+---::........:-:..          .:-----:::::::::++:::-+=-=+-  --=+=:--.:::::..............      
+.  ...   ..::.      ..::-====-..:::::::::::.:=-::-=---=: .-==-::-:.:::::................... 
+.::-:......      ..-=+++=-:   .:::::::::::::.:-::+*-=--. .:+===--:::::::.................:::
+---:..      ..-=++++=-:.      ::::::::::::::::::-%%*=+=  .-+#**+--::-:::..............::::::
+:.      .:-=+++=-:.   .       .:::::::--------:::+*+++.  ::=*=++--:::-:::...................
+        .-==--:.    .....      ..:::--------::.  :=**-   .:-+=*=+-:::::-::..................
+     ...    .      ..........      ...:::::::.. .-=*+.   .::+++=+:::::--:--:..............  
+   .......  ..          .             ...:::..  :-*+:.   .--=++++-::::------:...............
+  ...........                        ...... .   :=*=     .:-==++=-:::-------::..............
+.............                              .   .-++.     .:=+++==-.:---------::.............
+....                                    . ..   .=+-     ...-+++++=:-----------::............
+                                         ..    :++      ...-======-=---------:::::::::......
+                             .  ..:.    ...   .=*:       ..-------:-=======--=-:::::::......
+                                .:--:.  ..    :*+.   .    .-------:.:-=======:..:::.........
+                                    ....      =+-  ....   .-:::----:..:-===-:. .:::.........
+                                       ....  .:....:.    .-:--------:...:--.   .::::.....:::`;
+  var asciiEl = document.getElementById('ascii-portrait');
+  if (asciiEl) {
+    var frag = document.createDocumentFragment();
+    var lines = asciiArt.split('\n');
+    lines.forEach(function(line, li) {
+      for (var ci = 0; ci < line.length; ci++) {
+        var ch = line[ci];
+        if (ch !== ' ') {
+          var span = document.createElement('span');
+          span.className = 'glitch-char';
+          span.textContent = ch;
+          span.style.animationDelay = (((li * 37 + ci * 13) % 260) / 100) + 's';
+          frag.appendChild(span);
+        } else {
+          frag.appendChild(document.createTextNode(' '));
+        }
+      }
+      if (li < lines.length - 1) frag.appendChild(document.createTextNode('\n'));
+    });
+    asciiEl.appendChild(frag);
+  }
+})();
+</script>
+
+</body>
+</html>
