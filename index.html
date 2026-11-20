@@ -1,288 +1,639 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NTYDO — Emmanuel Díaz Ortega | uv &amp; Web Quickstart</title>
-  <style>
-    :root {
-      --bg: #0f1115;
-      --panel: #171a21;
-      --panel-2: #12151b;
-      --text: #eef1f6;
-      --muted: #9aa4b2;
-      --accent: #4ea8de;
-      --accent-2: #68d391;
-      --border: #282e3a;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-      padding: 2rem 1rem 3rem;
-    }
-    main {
-      max-width: 820px;
-      margin: 0 auto;
-      display: grid;
-      gap: 1.25rem;
-    }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.25rem;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-      gap: 1rem;
-    }
-    .tier {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 0.75rem;
-    }
-    h1, h2, h3 { margin: 0 0 0.45rem; font-weight: 650; }
-    h1 { font-size: 1.5rem; }
-    h2 { font-size: 1.12rem; }
-    h3 { font-size: 1rem; }
-    p { margin: 0.35rem 0; color: var(--muted); }
-    p.lead { color: var(--text); }
-    pre {
-      margin: 0.65rem 0 0;
-      padding: 0.85rem;
-      background: #0b0d11;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow-x: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.84rem;
-      color: #e6edf3;
-    }
-    .row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-    .actions {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-top: 0.5rem;
-    }
-    button, .btn-link {
-      background: var(--accent);
-      color: #081018;
-      border: 0;
-      border-radius: 6px;
-      padding: 0.45rem 0.8rem;
-      font-weight: 600;
-      font-size: 0.85rem;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-    button.secondary, .btn-link.secondary {
-      background: #232936;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    button:hover, .btn-link:hover { filter: brightness(1.08); }
-    ul { margin: 0.4rem 0 0; padding-left: 1.2rem; color: var(--muted); }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .qr-box {
-      margin-top: 0.6rem;
-      padding: 0.75rem;
-      border: 1px dashed var(--border);
-      border-radius: 8px;
-      background: #0b0d11;
-      font-size: 0.85rem;
-      color: var(--text);
-      word-break: break-all;
-    }
-    .badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.15rem 0.5rem;
-      border-radius: 999px;
-      background: rgba(78, 168, 222, 0.15);
-      color: var(--accent);
-    }
-    .badge.pro {
-      background: rgba(104, 211, 145, 0.15);
-      color: var(--accent-2);
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="dark" />
+<link rel="icon" href="data:," />
+<title>NTYDO — Matrix Redesign</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+<style>
+  :root{
+    --bg:#000000;
+    --panel:#040704;
+    --panel-2:#070c07;
+    --line:#1e3d1e;
+    --line-bright:#2f6b2f;
+    --txt:#d2ffd2;
+    --dim:#7fa87f;
+    --faint:#4a6b4a;
+    --green:#00ff41;
+    --green-soft:#39ff6a;
+    --amber:#ffd257;
+    --mono: ui-monospace, "Cascadia Mono", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--bg); color:var(--txt);
+    font-family:var(--mono); font-size:15px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--green); color:#000}
+  a{color:var(--green-soft)}
+  button, [role="button"], summary{ min-height:44px; }
+  :focus-visible{outline:2px solid var(--green); outline-offset:2px}
+
+  #rain{
+    position:fixed; inset:0; z-index:0; width:100%; height:100%;
+    opacity:.16; pointer-events:none;
+  }
+  .wrap{position:relative; z-index:1; max-width:880px; margin:0 auto; padding:0 16px 48px}
+
+  /* ── top bar ───────────────────────────── */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:14px 0 12px; border-bottom:1px solid var(--line);
+    font-size:13px; letter-spacing:.06em;
+  }
+  .topbar .brand{color:var(--green); font-weight:700; white-space:nowrap}
+  .topbar .brand span{color:var(--faint); font-weight:400}
+  .topbar nav{display:flex; gap:4px; flex-wrap:wrap; justify-content:flex-end}
+  .topbar nav a{
+    color:var(--dim); text-decoration:none; padding:10px 10px; min-height:44px;
+    display:inline-flex; align-items:center;
+  }
+  .topbar nav a:hover{color:var(--green)}
+
+  /* ── hero ──────────────────────────────── */
+  .hero{padding:28px 0 8px; text-align:left}
+  .sysline{color:var(--faint); font-size:12px; letter-spacing:.08em; margin:0 0 14px; word-break:break-word}
+  .sysline b{color:var(--dim); font-weight:400}
+  .ascii{
+    margin:0; color:var(--green); font-family:var(--mono);
+    font-size:clamp(5.2px, 1.92vw, 13.5px); line-height:1.18;
+    text-shadow:0 0 12px rgba(0,255,65,.35);
+    white-space:pre; overflow:hidden;
+  }
+  .tagline{font-size:17px; line-height:1.6; margin:18px 0 6px; max-width:620px}
+  .tagline strong{color:#fff; font-weight:700}
+  .sub{color:var(--dim); font-size:14px; margin:0 0 20px; max-width:620px}
+  .cta-row{display:flex; gap:10px; flex-wrap:wrap; margin:0 0 10px}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; min-height:48px;
+    padding:10px 18px; font-family:var(--mono); font-size:14px; font-weight:700;
+    letter-spacing:.04em; text-decoration:none; cursor:pointer; border-radius:3px;
+    border:1px solid var(--green); background:var(--green); color:#000;
+  }
+  .btn:hover{background:var(--green-soft)}
+  .btn.ghost{background:transparent; color:var(--green); border-color:var(--line-bright)}
+  .btn.ghost:hover{border-color:var(--green); color:var(--green-soft)}
+  .btn.small{min-height:44px; padding:8px 14px; font-size:13px}
+  .meta-line{color:var(--faint); font-size:12px; letter-spacing:.05em; margin:8px 0 0}
+
+  /* ── panels ────────────────────────────── */
+  section{margin-top:36px}
+  .panel{
+    background:var(--panel); border:1px solid var(--line); border-radius:4px;
+  }
+  .panel-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    padding:10px 14px; border-bottom:1px solid var(--line);
+    font-size:12px; letter-spacing:.08em; color:var(--dim);
+  }
+  .panel-head .path{color:var(--green)}
+  .panel-body{padding:16px 14px}
+  h2{
+    font-size:15px; letter-spacing:.1em; margin:0 0 4px; color:#fff; font-weight:700;
+  }
+  h2::before{content:"> "; color:var(--green)}
+  .lead{color:var(--dim); font-size:14px; margin:0 0 14px}
+
+  /* three.js viewport */
+  #gl{position:relative; height:210px; background:#000; overflow:hidden}
+  #gl canvas{display:block; width:100%; height:100%}
+  #gl-fallback{
+    position:absolute; inset:0; display:none; align-items:center; justify-content:center;
+    color:var(--faint); font-size:13px; text-align:center; padding:16px;
+  }
+  .gl-foot{
+    display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    padding:8px 14px; border-top:1px solid var(--line);
+    font-size:12px; color:var(--faint);
+  }
+  .gl-foot button{
+    background:none; border:1px solid var(--line); color:var(--dim); border-radius:3px;
+    font-family:var(--mono); font-size:12px; padding:8px 12px; cursor:pointer; min-height:44px;
+  }
+  .gl-foot button:hover{color:var(--green); border-color:var(--line-bright)}
+
+  /* install terminal */
+  .tabs{display:flex; gap:8px; margin:0 0 14px; flex-wrap:wrap}
+  .tab{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--dim);
+    font-family:var(--mono); font-size:13px; font-weight:700; letter-spacing:.05em;
+    padding:10px 16px; border-radius:3px; cursor:pointer; min-height:44px;
+  }
+  .tab[aria-selected="true"]{color:#000; background:var(--green); border-color:var(--green)}
+  .term{
+    background:#000; border:1px solid var(--line); border-radius:3px; padding:6px 0;
+  }
+  .step{
+    display:flex; align-items:flex-start; gap:10px;
+    padding:10px 12px; border-bottom:1px dashed #122612;
+  }
+  .step:last-child{border-bottom:none}
+  .step .n{color:var(--faint); font-size:12px; padding-top:3px; min-width:20px}
+  .step .cmd{flex:1; min-width:0}
+  .step .cmd code{
+    display:block; color:var(--txt); font-size:13.5px; word-break:break-all; white-space:pre-wrap;
+  }
+  .step .cmd code::before{content:"$ "; color:var(--green)}
+  .step .note{color:var(--faint); font-size:12px; display:block; margin-top:2px}
+  .copy{
+    flex:none; background:transparent; border:1px solid var(--line-bright); color:var(--green);
+    font-family:var(--mono); font-size:12px; font-weight:700; letter-spacing:.05em;
+    padding:8px 12px; border-radius:3px; cursor:pointer; min-height:44px; min-width:76px;
+  }
+  .copy:hover{background:#0a1f0a}
+  .copy.done{border-color:var(--green); background:var(--green); color:#000}
+  .term-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; align-items:center}
+  .hint{color:var(--faint); font-size:12px}
+
+  /* structure tree */
+  .tree{
+    margin:0; background:#000; border:1px solid var(--line); border-radius:3px;
+    padding:14px; font-size:clamp(9px, 2.55vw, 13px); line-height:1.75; color:var(--dim);
+    white-space:pre; overflow:hidden;
+  }
+  .tree .d{color:var(--green-soft)}
+  .tree .c{color:var(--faint)}
+  .struct-list{list-style:none; margin:14px 0 0; padding:0}
+  .struct-list li{
+    display:flex; gap:12px; padding:9px 2px; border-bottom:1px dashed #122612; font-size:14px;
+  }
+  .struct-list li:last-child{border-bottom:none}
+  .struct-list .k{color:var(--green); flex:none; min-width:148px; word-break:break-all}
+  .struct-list .v{color:var(--dim)}
+
+  /* readme / verify */
+  .readme{font-size:14px}
+  .readme p{margin:0 0 12px; color:var(--dim)}
+  .readme p b, .readme li b{color:var(--txt); font-weight:700}
+  .readme ul{margin:0 0 12px; padding-left:18px; color:var(--dim)}
+  .readme li{margin-bottom:6px}
+  .readme code, .inline-code{
+    background:#0a140a; border:1px solid var(--line); border-radius:3px;
+    padding:1px 6px; font-size:13px; color:var(--green-soft); word-break:break-all;
+  }
+  .check-list{list-style:none; margin:0; padding:0; counter-reset:chk}
+  .check-list li{
+    display:flex; gap:12px; padding:10px 2px; border-bottom:1px dashed #122612;
+    font-size:14px; color:var(--dim);
+  }
+  .check-list li:last-child{border-bottom:none}
+  .check-list .box{
+    flex:none; width:22px; height:22px; margin-top:2px; border:1px solid var(--line-bright);
+    color:var(--green); display:flex; align-items:center; justify-content:center; font-size:13px;
+    border-radius:2px;
+  }
+
+  /* editions */
+  .editions{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .edition{background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:18px 16px}
+  .edition.pro{border-color:var(--line-bright); background:var(--panel-2)}
+  .edition .tag{font-size:11px; letter-spacing:.12em; color:var(--faint); margin:0 0 6px}
+  .edition h3{margin:0 0 8px; font-size:18px; color:#fff}
+  .edition h3 span{color:var(--green)}
+  .edition p{color:var(--dim); font-size:14px; margin:0 0 12px}
+  .edition ul{list-style:none; margin:0 0 16px; padding:0; font-size:14px; color:var(--dim)}
+  .edition li{padding:5px 0}
+  .edition li::before{content:"+ "; color:var(--green)}
+
+  footer{
+    margin-top:40px; border-top:1px solid var(--line); padding-top:16px;
+    color:var(--faint); font-size:12px; line-height:1.8;
+    display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+  }
+  footer a{color:var(--dim)}
+
+  .toast{
+    position:fixed; left:50%; bottom:20px; transform:translateX(-50%) translateY(80px);
+    background:var(--green); color:#000; font-family:var(--mono); font-size:13px; font-weight:700;
+    padding:12px 18px; border-radius:3px; z-index:10; transition:transform .25s ease;
+    max-width:calc(100vw - 32px); text-align:center;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:640px){
+    #gl{height:168px}
+    .editions{grid-template-columns:1fr}
+    .struct-list li{flex-direction:column; gap:2px}
+    .struct-list .k{min-width:0}
+    .tagline{font-size:16px}
+    .topbar nav a{padding:10px 6px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .toast{transition:none}
+  }
+</style>
 </head>
 <body>
-  <main>
-    <section class="card">
-      <h1>NTYDO — Synthetic Intelligence &amp; <code>uv</code> Quickstart</h1>
-      <p class="lead">
-        Zero-cost local-first workflow using <code>uv</code> (<code>hatchling</code>),
-        Human-in-the-Loop (HITL) controls, and NIST-aligned verification across
-        Termux (Android) and desktop systems.
-      </p>
-      <p>
-        Repository: <a href="https://github.com/newdiazmanne-x/ntydo">https://github.com/newdiazmanne-x/ntydo</a> |
-        Pages: <a href="https://newdiazmanne-x.github.io/ntydo/">https://newdiazmanne-x.github.io/ntydo/</a>
-      </p>
-      <div class="actions">
-        <a class="btn-link" href="#termux-cta">Click to Action: Termux Run</a>
-        <a class="btn-link secondary" href="#desktop-cta">Click to Action: Desktop &amp; NIST</a>
-        <a class="btn-link secondary" href="#qr-action">QR to Action</a>
-      </div>
-    </section>
 
-    <section class="card">
-      <h2>Editions: Free vs. Pro</h2>
-      <div class="grid-2">
-        <div class="tier">
-          <div>
-            <span class="badge">FREE EDITION</span>
-            <h3>Local-First &amp; Community</h3>
-            <p>
-              Run <code>core-py</code>, <code>si-router</code>, and <code>si-agent</code> locally with
-              <code>UV_LINK_MODE=copy</code>, sandbox execution, unit tests, and SHA-256 verification.
-            </p>
-          </div>
-          <div class="actions">
-            <button type="button" data-copy="cmd-free">Copy Free Command</button>
-          </div>
-          <pre id="cmd-free">export UV_LINK_MODE=copy
-./scripts/smoke-test-packages.sh --json</pre>
+<canvas id="rain" aria-hidden="true"></canvas>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">NTYDO <span>// matrix</span></div>
+    <nav aria-label="Sections">
+      <a href="#install">INSTALL</a>
+      <a href="#structure">STRUCTURE</a>
+      <a href="#readme">README</a>
+      <a href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">GITHUB ↗</a>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="sysline">SYS.BOOT <b>OK</b> · REPO <b>PUBLIC</b> · BRANCH <b>MAIN</b> · COST <b>$0 — LOCAL</b></p>
+<pre class="ascii" aria-label="NTYDO">███╗   ██╗████████╗██╗   ██╗██████╗  ██████╗
+████╗  ██║╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔═══██╗
+██╔██╗ ██║   ██║    ╚████╔╝ ██║  ██║██║   ██║
+██║╚██╗██║   ██║     ╚██╔╝  ██║  ██║██║   ██║
+██║ ╚████║   ██║      ██║   ██████╔╝╚██████╔╝
+╚═╝  ╚═══╝   ╚═╝      ╚═╝   ╚═════╝  ╚═════╝</pre>
+    <p class="tagline"><strong>Minimal cross-platform workspace</strong> — apps, Python utilities, and operational scripts. Nothing extra.</p>
+    <p class="sub">SwiftUI for iOS. Kotlin for Android. HTML/JS for web. A <code class="inline-code">uv</code> Python package underneath. Runs locally on Termux and desktop — no paid service required.</p>
+    <div class="cta-row">
+      <a class="btn" href="#install">$ INSTALL — 4 COMMANDS</a>
+      <a class="btn ghost" href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">VIEW ON GITHUB ↗</a>
+    </div>
+    <p class="meta-line">SNAPSHOT 2026-11-20 · 19 COMMITS · © 2026 EMMANUEL DÍAZ ORTEGA</p>
+  </header>
+
+  <!-- THREE.JS — MINIMAL VIEWPORT -->
+  <section aria-label="Three.js preview">
+    <div class="panel">
+      <div class="panel-head">
+        <span><span class="path">~/ntydo</span> — three.js // minimal viewport</span>
+        <span id="gl-status">WEBGL · LOW-POLY · DPR ≤ 1.5</span>
+      </div>
+      <div id="gl">
+        <div id="gl-fallback">three.js unavailable offline — the rest of this page works without it.</div>
+      </div>
+      <div class="gl-foot">
+        <span>One wireframe scene in 210px. Drag to spin it. That is the whole footprint.</span>
+        <span>
+          <button type="button" id="rain-toggle" aria-pressed="true">RAIN: ON</button>
+          <button type="button" id="gl-toggle">PAUSE 3D</button>
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSTALL -->
+  <section id="install" aria-label="Install">
+    <div class="panel">
+      <div class="panel-head">
+        <span><span class="path">README.md</span> — quick install</span>
+        <span>CLICK TO COPY</span>
+      </div>
+      <div class="panel-body">
+        <h2>INSTALL</h2>
+        <p class="lead">Four commands. Same flow on phone and desktop — pick your shell, copy each line, run it in order.</p>
+
+        <div class="tabs" role="tablist" aria-label="Platform">
+          <button type="button" class="tab" role="tab" id="tab-termux" aria-selected="true" aria-controls="panel-termux">TERMUX (ANDROID)</button>
+          <button type="button" class="tab" role="tab" id="tab-desktop" aria-selected="false" aria-controls="panel-desktop">DESKTOP (MAC / LINUX)</button>
         </div>
 
-        <div class="tier">
-          <div>
-            <span class="badge pro">PRO EDITION</span>
-            <h3>Commercial &amp; Campaign Ready</h3>
-            <p>
-              Designed for commercial deployments, multi-rank orchestration, campaign playbooks,
-              and custom licensing arrangements with <strong>Emmanuel Díaz Ortega</strong>.
-            </p>
+        <div id="panel-termux" role="tabpanel" aria-labelledby="tab-termux">
+          <div class="term" data-term="termux">
+            <div class="step"><span class="n">01</span><div class="cmd"><code data-cmd="pkg install git python uv">pkg install git python uv</code><span class="note">Termux only — git + python, then uv itself from Termux's repo. Steps 02–04 need it.</span></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">02</span><div class="cmd"><code data-cmd="git clone https://github.com/newdiazmanne-x/ntydo.git">git clone https://github.com/newdiazmanne-x/ntydo.git</code></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">03</span><div class="cmd"><code data-cmd="cd ntydo &amp;&amp; UV_LINK_MODE=copy uv sync">cd ntydo &amp;&amp; UV_LINK_MODE=copy uv sync</code><span class="note">UV_LINK_MODE=copy — required on Termux storage, avoids hardlink failures.</span></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">04</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code><span class="note">Verify — NIST-aligned release check.</span></div><button type="button" class="copy">COPY</button></div>
           </div>
-          <div class="actions">
-            <a class="btn-link secondary" href="mailto:newdiazmanne@gmail.com?subject=NTYDO%20Pro%20Edition%20Inquiry">Request Pro Info</a>
-            <button type="button" class="secondary" data-copy="cmd-pro">Copy Release Check</button>
+        </div>
+
+        <div id="panel-desktop" role="tabpanel" aria-labelledby="tab-desktop" hidden>
+          <div class="term" data-term="desktop">
+            <div class="step"><span class="n">01</span><div class="cmd"><code data-cmd="git clone https://github.com/newdiazmanne-x/ntydo.git">git clone https://github.com/newdiazmanne-x/ntydo.git</code><span class="note">Needs git + uv already installed — if uv is missing, run: pkg install uv</span></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">02</span><div class="cmd"><code data-cmd="cd ntydo">cd ntydo</code></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">03</span><div class="cmd"><code data-cmd="UV_LINK_MODE=copy uv sync">UV_LINK_MODE=copy uv sync</code><span class="note">Syncs the uv Python package in packages/core-py. Zero-cost, fully local.</span></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">04</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code><span class="note">Verify — NIST-aligned release check.</span></div><button type="button" class="copy">COPY</button></div>
           </div>
-          <pre id="cmd-pro">export UV_LINK_MODE=copy
-./scripts/nist-release-check.sh --json</pre>
+        </div>
+
+        <div class="term-actions">
+          <button type="button" class="btn small" id="copy-all">COPY ALL — <span id="copy-all-label">TERMUX</span></button>
+          <a class="btn ghost small" href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">OPEN REPO ↗</a>
+          <span class="hint">No account, no token, no paid tier needed to run Free.</span>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="card" id="termux-cta">
-      <div class="row">
-        <h2>Click to Action: Termux (Android aarch64)</h2>
-        <button type="button" data-copy="cmd-termux">Copy</button>
+  <!-- STRUCTURE -->
+  <section id="structure" aria-label="Repository structure">
+    <div class="panel">
+      <div class="panel-head">
+        <span><span class="path">~/ntydo</span> — structure</span>
+        <span>TREE</span>
       </div>
-      <p>Clone, copy-link with <code>uv</code>, and run inside the isolated sandbox.</p>
-      <pre id="cmd-termux">git clone https://github.com/newdiazmanne-x/ntydo.git &amp;&amp; cd ntydo
-export UV_LINK_MODE=copy
-./scripts/nydo-sandbox.sh run uv run --link-mode=copy --project "$PWD/packages/si-agent" si-agent --goal "Pages quickstart" --tokens 512</pre>
-    </section>
-
-    <section class="card" id="desktop-cta">
-      <div class="row">
-        <h2>Click to Action: Desktop &amp; NIST Check</h2>
-        <button type="button" data-copy="cmd-desktop">Copy</button>
+      <div class="panel-body">
+        <h2>STRUCTURE</h2>
+        <p class="lead">Everything in the repo, as it stands on <b>main</b>. Small on purpose.</p>
+<pre class="tree">ntydo/
+├── <span class="d">apps/</span>
+│   ├── <span class="d">ios/</span>       <span class="c">— Minimal SwiftUI view</span>
+│   ├── <span class="d">android/</span>   <span class="c">— Minimal Kotlin activity</span>
+│   └── <span class="d">web/</span>       <span class="c">— Minimal HTML/JS page</span>
+├── <span class="d">packages/</span>
+│   └── <span class="d">core-py/</span>   <span class="c">— uv Python package</span>
+├── <span class="d">scripts/</span>     <span class="c">— Environment + diagnostic scripts</span>
+├── <span class="d">docs/</span>        <span class="c">— Documentation</span>
+├── <span class="d">mcp/</span>
+├── <span class="d">skills/</span>
+├── <span class="d">specimens/</span>
+├── README.md
+└── index.html</pre>
+        <ul class="struct-list">
+          <li><span class="k">apps/ios</span><span class="v">Minimal SwiftUI view — the iOS starting point.</span></li>
+          <li><span class="k">apps/android</span><span class="v">Minimal Kotlin activity — the Android starting point.</span></li>
+          <li><span class="k">apps/web</span><span class="v">Minimal HTML/JS page — no build step.</span></li>
+          <li><span class="k">packages/core-py</span><span class="v">The <code class="inline-code">uv</code> Python package. Sync it, run it locally.</span></li>
+          <li><span class="k">scripts/</span><span class="v">Environment and diagnostic scripts, including the NIST release check below.</span></li>
+        </ul>
       </div>
-      <p>Run package tests, build wheels in a temp dir, and verify source &amp; wheel SHA-256 manifests.</p>
-      <pre id="cmd-desktop">git clone https://github.com/newdiazmanne-x/ntydo.git &amp;&amp; cd ntydo
-export UV_LINK_MODE=copy
-./scripts/nist-release-check.sh --json</pre>
-    </section>
+    </div>
+  </section>
 
-    <section class="card" id="qr-action">
-      <h2>QR to Action (Safe URL Target — Zero Secrets)</h2>
-      <p>
-        Enter a clean public URL (such as your GitHub Pages URL) to generate a safe target link
-        for QR code encoding. Never encode tokens, API keys, or shell commands inside a QR code.
-      </p>
-      <div class="row">
-        <input
-          id="qr-url-input"
-          type="url"
-          value="https://newdiazmanne-x.github.io/ntydo/"
-          aria-label="Target URL for QR action"
-          style="flex: 1; min-width: 220px; padding: 0.45rem 0.65rem; border-radius: 6px; border: 1px solid var(--border); background: #0b0d11; color: var(--text);"
-        />
-        <button type="button" id="qr-update-btn">Update QR Target</button>
-        <button type="button" class="secondary" data-copy="qr-target-display">Copy URL</button>
+  <!-- README + VERIFY -->
+  <section id="readme" aria-label="Readme and verification">
+    <div class="panel">
+      <div class="panel-head">
+        <span><span class="path">README.md</span> — read me first</span>
+        <span>VERIFY BEFORE RELEASE</span>
       </div>
-      <div class="qr-box">
-        <div><strong>Active QR Target URL:</strong> <span id="qr-target-display">https://newdiazmanne-x.github.io/ntydo/</span></div>
-        <div id="qr-status" style="margin-top: 0.35rem; color: var(--accent-2);">Ready: clean HTTPS URL validated (no secrets).</div>
+      <div class="panel-body readme">
+        <h2>README — THE SHORT VERSION</h2>
+        <p>NTYDO is a <b>public workspace</b> for minimal cross-platform apps, Python utilities, and operational scripts. Clone it, sync it with <code>uv</code>, and it runs — on a phone in Termux or on a desktop, at zero cost.</p>
+        <ul>
+          <li><b>Local-first.</b> Execution happens on your machine. No hosted backend is required for Free.</li>
+          <li><b>One sync command.</b> <code>UV_LINK_MODE=copy uv sync</code> sets up the Python package everywhere, including Termux.</li>
+          <li><b>Human in the loop.</b> Nothing publishes or ships without explicit approval — run the check, read the JSON, then decide.</li>
+        </ul>
+
+        <h2 style="margin-top:22px">VERIFY — NIST CHECK</h2>
+        <p>Before any release, run the NIST-aligned check and read its JSON output:</p>
+        <div class="term" style="margin-bottom:14px">
+          <div class="step"><span class="n">$</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code></div><button type="button" class="copy">COPY</button></div>
+        </div>
+        <ul class="check-list">
+          <li><span class="box">1</span><span>Command exits clean and prints JSON — no silent failures.</span></li>
+          <li><span class="box">2</span><span>Repo link points to <b>github.com/newdiazmanne-x/ntydo</b> and no other contact than the one in the footer appears.</span></li>
+          <li><span class="box">3</span><span>Layout holds at desktop width and at a Termux / phone width — no broken panels or overflow.</span></li>
+          <li><span class="box">4</span><span>Free vs Pro wording matches the repo. Get explicit approval before sharing or publishing anything.</span></li>
+        </ul>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="card">
-      <h2>Documentation, HITL &amp; Copyright</h2>
-      <ul>
-        <li><strong>Copyright:</strong> © 2026 <strong>Emmanuel Díaz Ortega</strong>. All rights reserved. See <a href="COPYRIGHT.md">COPYRIGHT.md</a> and <a href="docs/copyright-and-tiers.md">docs/copyright-and-tiers.md</a>.</li>
-        <li><strong>Human-in-the-Loop (HITL):</strong> Always review commands, campaign assets, and release tags before execution.</li>
-        <li><strong>Secret Hygiene:</strong> Keep credentials in <code>~/.secrets/</code> (<code>chmod 600</code>); never commit keys to Git or embed them in web/QR targets.</li>
-      </ul>
-    </section>
-  </main>
+  <!-- EDITIONS -->
+  <section aria-label="Editions">
+    <div class="editions">
+      <div class="edition">
+        <p class="tag">EDITION — 01</p>
+        <h3>FREE <span>// $0</span></h3>
+        <p>The public repo, as-is. Clone it and run it locally.</p>
+        <ul>
+          <li>iOS, Android + web starters</li>
+          <li>uv Python package (core-py)</li>
+          <li>Diagnostic + NIST check scripts</li>
+          <li>Termux + desktop, fully local</li>
+        </ul>
+        <a class="btn small" href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">GET FREE ↗</a>
+      </div>
+      <div class="edition pro">
+        <p class="tag">EDITION — 02 · BY INQUIRY</p>
+        <h3>PRO <span>// ASK</span></h3>
+        <p>For a specific use case or platform beyond the public repo. No fixed pricing is published — ask first.</p>
+        <ul>
+          <li>Tell us the use case + platform</li>
+          <li>Tell us the timeline</li>
+          <li>Reply comes from the maintainer</li>
+        </ul>
+        <a class="btn ghost small" href="mailto:newdiazmanne@gmail.com?subject=NTYDO%20Pro%20inquiry">EMAIL FOR PRO ↗</a>
+      </div>
+    </div>
+  </section>
 
-  <script>
-    document.querySelectorAll("button[data-copy]").forEach((btn) => {
-      btn.addEventListener("click", async () => {
-        const el = document.getElementById(btn.dataset.copy);
-        if (!el) return;
-        const text = el.innerText.trim();
-        try {
-          await navigator.clipboard.writeText(text);
-          const prev = btn.textContent;
-          btn.textContent = "Copied";
-          setTimeout(() => { btn.textContent = prev; }, 1500);
-        } catch (_) {
-          btn.textContent = "Select manually";
-        }
-      });
-    });
+  <footer>
+    <span>© 2026 Emmanuel Díaz Ortega — NTYDO, all rights reserved.<br>
+    Contact: <a href="mailto:newdiazmanne@gmail.com">newdiazmanne@gmail.com</a></span>
+    <span><a href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">github.com/newdiazmanne-x/ntydo ↗</a><br>
+    <a href="https://newdiazmanne-x.github.io/ntydo/" target="_blank" rel="noopener">newdiazmanne-x.github.io/ntydo ↗</a></span>
+  </footer>
 
-    const qrInput = document.getElementById("qr-url-input");
-    const qrBtn = document.getElementById("qr-update-btn");
-    const qrDisplay = document.getElementById("qr-target-display");
-    const qrStatus = document.getElementById("qr-status");
+</div>
 
-    function updateQrTarget() {
-      const raw = (qrInput.value || "").trim();
-      try {
-        const parsed = new URL(raw);
-        if (parsed.protocol !== "https:" && parsed.protocol !== "http:") {
-          throw new Error("Only http/https URLs are allowed for QR targets.");
-        }
-        if (parsed.username || parsed.password) {
-          throw new Error("Credentials are not allowed in QR target URLs.");
-        }
-        qrDisplay.textContent = parsed.toString();
-        qrStatus.style.color = "var(--accent-2)";
-        qrStatus.textContent = "Safe QR target URL ready (no embedded secrets).";
-      } catch (err) {
-        qrStatus.style.color = "#f6ad55";
-        qrStatus.textContent = "Invalid URL: " + (err && err.message ? err.message : "check format");
+<div class="toast" id="toast" role="status" aria-live="polite">COPIED</div>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ── toast ── */
+  var toast = document.getElementById("toast"), toastTimer = null;
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toast.classList.remove("show"); }, 1800);
+  }
+
+  /* ── copy ── */
+  function copyText(text, btn){
+    function done(){
+      if(btn){
+        var old = btn.textContent;
+        btn.textContent = "COPIED ✓"; btn.classList.add("done");
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove("done"); }, 1600);
       }
+      showToast("COPIED TO CLIPBOARD");
     }
+    function fallback(){
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); }
+      catch(e){ showToast("COPY FAILED — SELECT THE COMMAND MANUALLY"); }
+      document.body.removeChild(ta);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else { fallback(); }
+  }
+  document.querySelectorAll(".copy").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var code = btn.closest(".step").querySelector("code");
+      copyText(code.getAttribute("data-cmd") || code.textContent.trim(), btn);
+    });
+  });
 
-    qrBtn.addEventListener("click", updateQrTarget);
-    qrInput.addEventListener("change", updateQrTarget);
-  </script>
+  /* ── platform tabs ── */
+  var tabT = document.getElementById("tab-termux"),
+      tabD = document.getElementById("tab-desktop"),
+      panT = document.getElementById("panel-termux"),
+      panD = document.getElementById("panel-desktop"),
+      allLabel = document.getElementById("copy-all-label"),
+      active = "termux";
+  function setTab(which){
+    active = which;
+    var isT = which === "termux";
+    tabT.setAttribute("aria-selected", isT ? "true" : "false");
+    tabD.setAttribute("aria-selected", isT ? "false" : "true");
+    panT.hidden = !isT; panD.hidden = isT;
+    allLabel.textContent = isT ? "TERMUX" : "DESKTOP";
+  }
+  tabT.addEventListener("click", function(){ setTab("termux"); });
+  tabD.addEventListener("click", function(){ setTab("desktop"); });
+
+  document.getElementById("copy-all").addEventListener("click", function(){
+    var panel = active === "termux" ? panT : panD;
+    var cmds = [];
+    panel.querySelectorAll("code[data-cmd]").forEach(function(c){ cmds.push(c.getAttribute("data-cmd")); });
+    copyText(cmds.join("\n"), null);
+  });
+
+  /* ── matrix rain (tiny, 2d canvas) ── */
+  var canvas = document.getElementById("rain"), ctx = canvas.getContext("2d");
+  var rainOn = !reduced, cols = 0, drops = [], rainTimer = null;
+  var GLYPHS = "NTYDO01<>#$%&*+=ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃ0123456789";
+  function rainResize(){
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    cols = Math.floor(canvas.width / 16);
+    drops = [];
+    for(var i = 0; i < cols; i++) drops[i] = Math.floor(Math.random() * -40);
+  }
+  function rainTick(){
+    ctx.fillStyle = "rgba(0,0,0,0.08)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#00ff41";
+    ctx.font = "14px monospace";
+    for(var i = 0; i < cols; i++){
+      var ch = GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
+      ctx.fillText(ch, i * 16, drops[i] * 16);
+      if(drops[i] * 16 > canvas.height && Math.random() > 0.976) drops[i] = 0;
+      drops[i]++;
+    }
+  }
+  function rainStart(){
+    if(rainTimer || !rainOn) return;
+    rainTimer = setInterval(rainTick, 66);
+  }
+  function rainStop(){
+    clearInterval(rainTimer); rainTimer = null;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  var rainBtn = document.getElementById("rain-toggle");
+  function syncRainBtn(){
+    rainBtn.textContent = "RAIN: " + (rainOn ? "ON" : "OFF");
+    rainBtn.setAttribute("aria-pressed", rainOn ? "true" : "false");
+  }
+  rainBtn.addEventListener("click", function(){
+    rainOn = !rainOn;
+    if(rainOn){ rainResize(); rainStart(); } else { rainStop(); }
+    syncRainBtn();
+  });
+  rainResize(); syncRainBtn(); rainStart();
+  var rzTimer = null;
+  window.addEventListener("resize", function(){
+    clearTimeout(rzTimer);
+    rzTimer = setTimeout(function(){ if(rainOn) rainResize(); }, 200);
+  });
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden){ rainStop(); } else { rainStart(); }
+  });
+
+  /* ── three.js — one small wireframe scene ── */
+  var glBox = document.getElementById("gl"),
+      glBtn = document.getElementById("gl-toggle"),
+      glStatus = document.getElementById("gl-status"),
+      glRunning = true, glStarted = false;
+  if(window.THREE){
+    try{
+      var renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+      glBox.appendChild(renderer.domElement);
+
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(50, 2, 0.1, 100);
+      camera.position.set(0, 0, 5.2);
+
+      var green = new THREE.LineBasicMaterial({ color: 0x00ff41, transparent:true, opacity:0.95 });
+      var dim = new THREE.LineBasicMaterial({ color: 0x1e7a34, transparent:true, opacity:0.8 });
+
+      var outer = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.55, 0)), green);
+      var inner = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.BoxGeometry(1.15, 1.15, 1.15)), dim);
+      var ring = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.TorusGeometry(2.05, 0.02, 4, 48)), dim);
+      ring.rotation.x = Math.PI / 2.4;
+      scene.add(outer); scene.add(inner); scene.add(ring);
+
+      var pts = [];
+      for(var i = 0; i < 90; i++){
+        pts.push((Math.random() - 0.5) * 9, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 4 - 1);
+      }
+      var pgeo = new THREE.BufferGeometry();
+      pgeo.setAttribute("position", new THREE.Float32BufferAttribute(pts, 3));
+      scene.add(new THREE.Points(pgeo, new THREE.PointsMaterial({ color:0x2f9e4f, size:0.045 })));
+
+      function sizeGL(){
+        var w = glBox.clientWidth, h = glBox.clientHeight;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h; camera.updateProjectionMatrix();
+      }
+      sizeGL();
+      if(window.ResizeObserver) new ResizeObserver(sizeGL).observe(glBox);
+      window.addEventListener("resize", sizeGL);
+
+      /* drag to spin */
+      var dragging = false, px = 0, py = 0, vx = 0.0035, vy = 0.002, tix = 0, tiy = 0;
+      glBox.addEventListener("pointerdown", function(e){
+        dragging = true; px = e.clientX; py = e.clientY; glBox.setPointerCapture(e.pointerId);
+      });
+      glBox.addEventListener("pointermove", function(e){
+        if(!dragging) return;
+        tiy += (e.clientX - px) * 0.008; tix += (e.clientY - py) * 0.008;
+        px = e.clientX; py = e.clientY;
+      });
+      glBox.addEventListener("pointerup", function(){ dragging = false; });
+      glBox.addEventListener("pointercancel", function(){ dragging = false; });
+
+      var inView = true;
+      if(window.IntersectionObserver){
+        new IntersectionObserver(function(en){ inView = en[0].isIntersecting; }, { threshold: 0.05 }).observe(glBox);
+      }
+      function loop(){
+        requestAnimationFrame(loop);
+        if(!glRunning || !inView || document.hidden) return;
+        if(!dragging){ tiy += vx; tix += vy * 0.4; }
+        outer.rotation.set(tix, tiy, 0);
+        inner.rotation.set(-tix * 1.4, -tiy * 1.2, tiy * 0.3);
+        ring.rotation.z += 0.0016;
+        renderer.render(scene, camera);
+      }
+      loop(); glStarted = true;
+      glStatus.textContent = "WEBGL · LIVE · DRAG TO SPIN";
+    }catch(e){
+      document.getElementById("gl-fallback").style.display = "flex";
+    }
+  } else {
+    document.getElementById("gl-fallback").style.display = "flex";
+  }
+  glBtn.addEventListener("click", function(){
+    if(!glStarted){ showToast("3D UNAVAILABLE IN THIS BROWSER"); return; }
+    glRunning = !glRunning;
+    glBtn.textContent = glRunning ? "PAUSE 3D" : "RESUME 3D";
+  });
+})();
+</script>
 </body>
 </html>
