@@ -31,10 +31,17 @@
   "moe_controls": {
     "routing_mode": "top-k-with-capacity-guard",
     "degrade_on_congestion": true,
-    "collectives": ["AlltoAll", "AllReduce", "ReduceScatter"]
+    "collectives": [
+      "AlltoAll",
+      "AllReduce",
+      "ReduceScatter"
+    ]
   },
   "kernel_compiler_controls": {
-    "ir_stack": ["MLIR", "LLVM-IR"],
+    "ir_stack": [
+      "MLIR",
+      "LLVM-IR"
+    ],
     "kernel_to_kernel_fusion": true,
     "require_numerical_parity_check": true
   },
@@ -42,5 +49,9 @@
     "require_hitl_for_external_scale_and_git_push": true,
     "secrets_path": "~/.secrets/",
     "disallow_secrets_in_repo": true
+  },
+  "routing_thresholds": {
+    "tier1_tokens": 4096,
+    "tier3_tokens": 16384
   }
 }
