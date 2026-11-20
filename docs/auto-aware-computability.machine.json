@@ -1,0 +1,46 @@
+{
+  "$schema": "https://ntydo.local/schemas/auto-aware-computability-v1.json",
+  "version": "1.0.0",
+  "paradigm": "synthetic-intelligence-auto-aware-computability",
+  "scaling_hierarchy": [
+    {
+      "tier": 0,
+      "name": "edge-termux-deterministic",
+      "compute": "local-aarch64-uv-hatchling",
+      "use_when": "low-latency, local-only, or small-footprint tasks"
+    },
+    {
+      "tier": 1,
+      "name": "sparse-moe-local-or-lan",
+      "compute": "top-k-moe-quantized",
+      "use_when": "specialized domain routing with bounded memory"
+    },
+    {
+      "tier": 2,
+      "name": "distributed-openmpi-llvm-fused",
+      "compute": "openmpi-ranks-plus-llvm-kernel-fusion",
+      "use_when": "multi-rank parallel execution and fused kernel compute scaling"
+    },
+    {
+      "tier": 3,
+      "name": "cloud-google-ai-scale",
+      "compute": "remote-accelerator-or-google-ai-endpoints",
+      "use_when": "high-compute frontier reasoning or large-scale workloads with explicit approval"
+    }
+  ],
+  "moe_controls": {
+    "routing_mode": "top-k-with-capacity-guard",
+    "degrade_on_congestion": true,
+    "collectives": ["AlltoAll", "AllReduce", "ReduceScatter"]
+  },
+  "kernel_compiler_controls": {
+    "ir_stack": ["MLIR", "LLVM-IR"],
+    "kernel_to_kernel_fusion": true,
+    "require_numerical_parity_check": true
+  },
+  "hitl_and_security": {
+    "require_hitl_for_external_scale_and_git_push": true,
+    "secrets_path": "~/.secrets/",
+    "disallow_secrets_in_repo": true
+  }
+}

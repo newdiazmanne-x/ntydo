@@ -1,0 +1,44 @@
+{
+  "mcpServers": {
+    "ntydo-docs": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/data/data/com.termux/files/home/ntydo/docs"
+      ],
+      "env": {}
+    },
+    "ntydo-skills": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/data/data/com.termux/files/home/ntydo/skills"
+      ],
+      "env": {}
+    },
+    "nydo-sandbox": {
+      "command": "/data/data/com.termux/files/home/ntydo/scripts/nydo-sandbox.sh",
+      "args": [
+        "status"
+      ],
+      "env": {
+        "UV_LINK_MODE": "copy"
+      }
+    },
+    "uv-core-py": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--link-mode=copy",
+        "--project",
+        "/data/data/com.termux/files/home/ntydo/packages/core-py",
+        "app"
+      ],
+      "env": {
+        "UV_LINK_MODE": "copy"
+      }
+    }
+  }
+}
