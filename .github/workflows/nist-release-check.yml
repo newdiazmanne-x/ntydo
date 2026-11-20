@@ -30,4 +30,4 @@ jobs:
         uses: astral-sh/setup-uv@v4
 
       - name: Run NIST release check (--json)
-        run: ./scripts/nist-release-check.sh --json
+        run: ./scripts/nist-release-check.sh
