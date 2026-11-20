@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="dark" />
 <link rel="icon" href="data:," />
-<title>NTYDO — Matrix Redesign</title>
+<title>NTYDO — Free $0 · Pro Paid · One-File Patch</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
 <style>
   :root{
@@ -80,6 +80,13 @@
   .btn.ghost:hover{border-color:var(--green); color:var(--green-soft)}
   .btn.small{min-height:44px; padding:8px 14px; font-size:13px}
   .meta-line{color:var(--faint); font-size:12px; letter-spacing:.05em; margin:8px 0 0}
+  .proof{
+    display:flex; flex-wrap:wrap; gap:1px; background:var(--line);
+    border:1px solid var(--line); border-radius:3px; margin:18px 0 4px; overflow:hidden;
+  }
+  .proof div{background:#000; padding:10px 14px; flex:1 1 150px}
+  .proof b{display:block; color:var(--green); font-size:17px; line-height:1.3}
+  .proof span{color:var(--faint); font-size:11px; letter-spacing:.07em}
 
   /* ── panels ────────────────────────────── */
   section{margin-top:36px}
@@ -200,6 +207,16 @@
   .edition li{padding:5px 0}
   .edition li::before{content:"+ "; color:var(--green)}
 
+  /* paywall */
+  .paywall{border:1px dashed var(--line-bright); border-radius:3px; padding:14px 12px; background:#000}
+  .paywall .lock{color:var(--amber); font-size:12px; letter-spacing:.1em; margin:0 0 12px}
+  .pay-opt{font-size:12px; letter-spacing:.08em; color:var(--dim); margin:14px 0 6px}
+  .payrow .cmd code::before{content:""}
+  .payrow .cmd .k2{color:var(--faint); font-size:11px; letter-spacing:.08em; display:block}
+  .crypto-line{color:var(--dim); font-size:13.5px; margin:0 0 14px}
+  .crypto-line b{color:var(--txt)}
+  #paid-note{color:var(--dim); font-size:13.5px; border-top:1px dashed #122612; margin:12px 0 0; padding-top:10px}
+
   footer{
     margin-top:40px; border-top:1px solid var(--line); padding-top:16px;
     color:var(--faint); font-size:12px; line-height:1.8;
@@ -239,6 +256,8 @@
     <div class="brand">NTYDO <span>// matrix</span></div>
     <nav aria-label="Sections">
       <a href="#install">INSTALL</a>
+      <a href="#patch">PATCH</a>
+      <a href="#editions">EDITIONS</a>
       <a href="#structure">STRUCTURE</a>
       <a href="#readme">README</a>
       <a href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">GITHUB ↗</a>
@@ -247,20 +266,27 @@
 
   <!-- HERO -->
   <header class="hero">
-    <p class="sysline">SYS.BOOT <b>OK</b> · REPO <b>PUBLIC</b> · BRANCH <b>MAIN</b> · COST <b>$0 — LOCAL</b></p>
+    <p class="sysline">SYS.BOOT <b>OK</b> · REPO <b>PUBLIC</b> · BRANCH <b>MAIN</b> · FREE <b>$0</b> · PRO <b>PAID — PAYWALL</b> · DELIVERY <b>ONE-FILE PATCH</b></p>
 <pre class="ascii" aria-label="NTYDO">███╗   ██╗████████╗██╗   ██╗██████╗  ██████╗
 ████╗  ██║╚══██╔══╝╚██╗ ██╔╝██╔══██╗██╔═══██╗
 ██╔██╗ ██║   ██║    ╚████╔╝ ██║  ██║██║   ██║
 ██║╚██╗██║   ██║     ╚██╔╝  ██║  ██║██║   ██║
 ██║ ╚████║   ██║      ██║   ██████╔╝╚██████╔╝
 ╚═╝  ╚═══╝   ╚═╝      ╚═╝   ╚═════╝  ╚═════╝</pre>
-    <p class="tagline"><strong>Minimal cross-platform workspace</strong> — apps, Python utilities, and operational scripts. Nothing extra.</p>
-    <p class="sub">SwiftUI for iOS. Kotlin for Android. HTML/JS for web. A <code class="inline-code">uv</code> Python package underneath. Runs locally on Termux and desktop — no paid service required.</p>
+    <p class="tagline"><strong>NTYDO, ready to sell and ship.</strong> A minimal cross-platform workspace — apps, Python utilities, and operational scripts. Free to run, Pro behind a paywall, delivered as one whole <code class="inline-code">index.html</code> patch you paste in yourself.</p>
+    <p class="sub">SwiftUI for iOS. Kotlin for Android. HTML/JS for web. Three <code class="inline-code">uv</code> Python packages underneath — core-py, si-agent, si-router. Runs locally on Termux and desktop at zero cost. You keep your credentials: every publish step runs on your own machine, under your approval.</p>
     <div class="cta-row">
-      <a class="btn" href="#install">$ INSTALL — 4 COMMANDS</a>
-      <a class="btn ghost" href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">VIEW ON GITHUB ↗</a>
+      <a class="btn" href="#install">$ GET IT FREE — 4 COMMANDS</a>
+      <a class="btn ghost" href="#patch">APPLY THE PATCH ↓</a>
+      <a class="btn ghost" href="#editions">FREE vs PRO</a>
     </div>
-    <p class="meta-line">SNAPSHOT 2026-11-20 · 19 COMMITS · © 2026 EMMANUEL DÍAZ ORTEGA</p>
+    <div class="proof" aria-label="Verified results, 2026-11-20">
+      <div><b>3/3</b><span>SMOKE TESTS PASS</span></div>
+      <div><b>6/6</b><span>NIST CHECK STEPS PASS</span></div>
+      <div><b>3</b><span>WHEELS BUILT + SHA-256 VERIFIED</span></div>
+      <div><b>$0</b><span>LOCAL RUN COST — TERMUX + DESKTOP</span></div>
+    </div>
+    <p class="meta-line">VERIFIED 2026-11-20 ON TERMUX + DESKTOP · © 2026 EMMANUEL DÍAZ ORTEGA</p>
   </header>
 
   <!-- THREE.JS — MINIMAL VIEWPORT -->
@@ -301,19 +327,19 @@
 
         <div id="panel-termux" role="tabpanel" aria-labelledby="tab-termux">
           <div class="term" data-term="termux">
-            <div class="step"><span class="n">01</span><div class="cmd"><code data-cmd="pkg install git python uv">pkg install git python uv</code><span class="note">Termux only — git + python, then uv itself from Termux's repo. Steps 02–04 need it.</span></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">01</span><div class="cmd"><code data-cmd="pkg install -y git python uv">pkg install -y git python uv</code><span class="note">Termux only — one pkg line gets git, python, and the prebuilt uv. Do NOT install uv with pip here: PyPI has no Android wheel, so pip tries a Rust source build and fails.</span></div><button type="button" class="copy">COPY</button></div>
             <div class="step"><span class="n">02</span><div class="cmd"><code data-cmd="git clone https://github.com/newdiazmanne-x/ntydo.git">git clone https://github.com/newdiazmanne-x/ntydo.git</code></div><button type="button" class="copy">COPY</button></div>
             <div class="step"><span class="n">03</span><div class="cmd"><code data-cmd="cd ntydo &amp;&amp; UV_LINK_MODE=copy uv sync">cd ntydo &amp;&amp; UV_LINK_MODE=copy uv sync</code><span class="note">UV_LINK_MODE=copy — required on Termux storage, avoids hardlink failures.</span></div><button type="button" class="copy">COPY</button></div>
-            <div class="step"><span class="n">04</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code><span class="note">Verify — NIST-aligned release check.</span></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">04</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code><span class="note">Verify — NIST-aligned release check, run bare: it takes no --json flag (only --verify-only). Expect 6/6 steps, 3 wheels, SHA-256 manifests verified.</span></div><button type="button" class="copy">COPY</button></div>
           </div>
         </div>
 
         <div id="panel-desktop" role="tabpanel" aria-labelledby="tab-desktop" hidden>
           <div class="term" data-term="desktop">
-            <div class="step"><span class="n">01</span><div class="cmd"><code data-cmd="git clone https://github.com/newdiazmanne-x/ntydo.git">git clone https://github.com/newdiazmanne-x/ntydo.git</code><span class="note">Needs git + uv already installed — if uv is missing, run: pkg install uv</span></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">01</span><div class="cmd"><code data-cmd="git clone https://github.com/newdiazmanne-x/ntydo.git">git clone https://github.com/newdiazmanne-x/ntydo.git</code><span class="note">Needs git + uv already installed — if uv is missing, install it for your system (Termux: pkg install uv; desktop: see astral.sh/uv)</span></div><button type="button" class="copy">COPY</button></div>
             <div class="step"><span class="n">02</span><div class="cmd"><code data-cmd="cd ntydo">cd ntydo</code></div><button type="button" class="copy">COPY</button></div>
             <div class="step"><span class="n">03</span><div class="cmd"><code data-cmd="UV_LINK_MODE=copy uv sync">UV_LINK_MODE=copy uv sync</code><span class="note">Syncs the uv Python package in packages/core-py. Zero-cost, fully local.</span></div><button type="button" class="copy">COPY</button></div>
-            <div class="step"><span class="n">04</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code><span class="note">Verify — NIST-aligned release check.</span></div><button type="button" class="copy">COPY</button></div>
+            <div class="step"><span class="n">04</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code><span class="note">Verify — NIST-aligned release check, run bare: it takes no --json flag (only --verify-only). Expect 6/6 steps, 3 wheels, SHA-256 manifests verified.</span></div><button type="button" class="copy">COPY</button></div>
           </div>
         </div>
 
@@ -342,7 +368,9 @@
 │   ├── <span class="d">android/</span>   <span class="c">— Minimal Kotlin activity</span>
 │   └── <span class="d">web/</span>       <span class="c">— Minimal HTML/JS page</span>
 ├── <span class="d">packages/</span>
-│   └── <span class="d">core-py/</span>   <span class="c">— uv Python package</span>
+│   ├── <span class="d">core-py/</span>   <span class="c">— uv Python package</span>
+│   ├── <span class="d">si-agent/</span>  <span class="c">— uv Python package</span>
+│   └── <span class="d">si-router/</span> <span class="c">— uv Python package</span>
 ├── <span class="d">scripts/</span>     <span class="c">— Environment + diagnostic scripts</span>
 ├── <span class="d">docs/</span>        <span class="c">— Documentation</span>
 ├── <span class="d">mcp/</span>
@@ -355,6 +383,8 @@
           <li><span class="k">apps/android</span><span class="v">Minimal Kotlin activity — the Android starting point.</span></li>
           <li><span class="k">apps/web</span><span class="v">Minimal HTML/JS page — no build step.</span></li>
           <li><span class="k">packages/core-py</span><span class="v">The <code class="inline-code">uv</code> Python package. Sync it, run it locally.</span></li>
+          <li><span class="k">packages/si-agent</span><span class="v">Second <code class="inline-code">uv</code> package — smoke-tested and wheel-built by the NIST check.</span></li>
+          <li><span class="k">packages/si-router</span><span class="v">Third <code class="inline-code">uv</code> package — 8/8 spec tests passing.</span></li>
           <li><span class="k">scripts/</span><span class="v">Environment and diagnostic scripts, including the NIST release check below.</span></li>
         </ul>
       </div>
@@ -374,17 +404,17 @@
         <ul>
           <li><b>Local-first.</b> Execution happens on your machine. No hosted backend is required for Free.</li>
           <li><b>One sync command.</b> <code>UV_LINK_MODE=copy uv sync</code> sets up the Python package everywhere, including Termux.</li>
-          <li><b>Human in the loop.</b> Nothing publishes or ships without explicit approval — run the check, read the JSON, then decide.</li>
+          <li><b>Human in the loop.</b> Nothing publishes or ships without explicit approval — run the check, read the result, then decide.</li>
         </ul>
 
         <h2 style="margin-top:22px">VERIFY — NIST CHECK</h2>
-        <p>Before any release, run the NIST-aligned check and read its JSON output:</p>
+        <p>Before any release, run the NIST-aligned check — bare, no <code>--json</code> flag (the script rejects it; <code>--verify-only</code> re-checks existing evidence):</p>
         <div class="term" style="margin-bottom:14px">
           <div class="step"><span class="n">$</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code></div><button type="button" class="copy">COPY</button></div>
         </div>
         <ul class="check-list">
-          <li><span class="box">1</span><span>Command exits clean and prints JSON — no silent failures.</span></li>
-          <li><span class="box">2</span><span>Repo link points to <b>github.com/newdiazmanne-x/ntydo</b> and no other contact than the one in the footer appears.</span></li>
+          <li><span class="box">1</span><span>Command exits clean: 6/6 steps, 3 wheels built, SHA-256 manifests verified — no silent failures.</span></li>
+          <li><span class="box">2</span><span>Repo link points to <b>github.com/newdiazmanne-x/ntydo</b>, and the Pro paywall shows the maintainer's CLABE digit for digit — no email address appears anywhere on the page.</span></li>
           <li><span class="box">3</span><span>Layout holds at desktop width and at a Termux / phone width — no broken panels or overflow.</span></li>
           <li><span class="box">4</span><span>Free vs Pro wording matches the repo. Get explicit approval before sharing or publishing anything.</span></li>
         </ul>
@@ -392,38 +422,82 @@
     </div>
   </section>
 
+  <!-- PUBLISH — THE WHOLE PATCH -->
+  <section id="patch" aria-label="Publish patch">
+    <div class="panel">
+      <div class="panel-head">
+        <span><span class="path">index.html</span> — the whole patch, one file</span>
+        <span>PASTE · VERIFY · PUBLISH</span>
+      </div>
+      <div class="panel-body">
+        <h2>PUBLISH — APPLY THIS PAGE AS THE PATCH</h2>
+        <p class="lead">This redesign is a single self-contained <b>index.html</b> — no build step, no extra files. Save this page's file over the repo's <b>index.html</b>, then paste these commands on Termux or desktop. Your git credentials never leave your device, and nothing goes live until you push.</p>
+
+        <div class="term" data-term="patch">
+          <div class="step"><span class="n">01</span><div class="cmd"><code data-cmd="cd ~/ntydo &amp;&amp; cp index.html index.html.bak">cd ~/ntydo &amp;&amp; cp index.html index.html.bak</code><span class="note">Back up the current page first — rollback stays one command away.</span></div><button type="button" class="copy">COPY</button></div>
+          <div class="step"><span class="n">02</span><div class="cmd"><code data-cmd="grep -n &quot;pip install u[v]&quot; index.html; grep -n &quot;nist-release-check.sh --jso[n]&quot; index.html">grep -n "pip install u[v]" index.html; grep -n "nist-release-check.sh --jso[n]" index.html</code><span class="note">After dropping in the new index.html, both greps must print NOTHING — proof the broken Termux line and the invalid --json flag are gone in this build. (The [v] / [n] keep each grep from matching its own line.)</span></div><button type="button" class="copy">COPY</button></div>
+          <div class="step"><span class="n">03</span><div class="cmd"><code data-cmd="./scripts/nist-release-check.sh">./scripts/nist-release-check.sh</code><span class="note">Verify before you publish — expect 6/6 steps, 3 wheels, SHA-256 manifests verified.</span></div><button type="button" class="copy">COPY</button></div>
+          <div class="step"><span class="n">04</span><div class="cmd"><code data-cmd="git add index.html &amp;&amp; git commit -m &quot;deploy: NTYDO Matrix sales redesign (whole-page patch)&quot;">git add index.html &amp;&amp; git commit -m "deploy: NTYDO Matrix sales redesign (whole-page patch)"</code></div><button type="button" class="copy">COPY</button></div>
+          <div class="step"><span class="n">05</span><div class="cmd"><code data-cmd="git push origin main">git push origin main</code><span class="note">Push uses git's own stored credentials on your device — nothing is shared with anyone.</span></div><button type="button" class="copy">COPY</button></div>
+          <div class="step"><span class="n">06</span><div class="cmd"><code data-cmd="gh api repos/newdiazmanne-x/ntydo/pages -X POST -f source[branch]=main -f source[path]=/">gh api repos/newdiazmanne-x/ntydo/pages -X POST -f source[branch]=main -f source[path]=/</code><span class="note">Turn on GitHub Pages. Needs gh auth login on your device first — or skip gh entirely: repo → Settings → Pages → Deploy from a branch → main → / (root) → Save.</span></div><button type="button" class="copy">COPY</button></div>
+        </div>
+
+        <div class="term-actions">
+          <button type="button" class="btn small" id="copy-patch">COPY ALL — PATCH SCRIPT</button>
+          <span class="hint">Rollback any time: <code class="inline-code">cp index.html.bak index.html</code> or <code class="inline-code">git revert HEAD</code>. Human-in-the-loop: you approve, then you push.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- EDITIONS -->
-  <section aria-label="Editions">
+  <section id="editions" aria-label="Editions">
     <div class="editions">
       <div class="edition">
         <p class="tag">EDITION — 01</p>
         <h3>FREE <span>// $0</span></h3>
-        <p>The public repo, as-is. Clone it and run it locally.</p>
+        <p>The public repo, as-is. Clone it and run it locally — verified green on 2026-11-20: smoke 3/3, NIST 6/6, 3 wheels built.</p>
         <ul>
           <li>iOS, Android + web starters</li>
-          <li>uv Python package (core-py)</li>
+          <li>3 uv Python packages (core-py, si-agent, si-router)</li>
           <li>Diagnostic + NIST check scripts</li>
           <li>Termux + desktop, fully local</li>
+          <li>This page included — one-file patch, no build step</li>
         </ul>
         <a class="btn small" href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">GET FREE ↗</a>
       </div>
       <div class="edition pro">
-        <p class="tag">EDITION — 02 · BY INQUIRY</p>
-        <h3>PRO <span>// ASK</span></h3>
-        <p>For a specific use case or platform beyond the public repo. No fixed pricing is published — ask first.</p>
+        <p class="tag">EDITION — 02 · PAID</p>
+        <h3>PRO <span>// PAYWALL</span></h3>
+        <p>Pro is paid. Custom work beyond the public repo, delivered after the maintainer confirms your payment — human-in-the-loop, nothing unlocks automatically.</p>
         <ul>
-          <li>Tell us the use case + platform</li>
-          <li>Tell us the timeline</li>
-          <li>Reply comes from the maintainer</li>
+          <li>Custom commercial licensing</li>
+          <li>Multi-rank / campaign playbooks</li>
+          <li>Support arrangements</li>
+          <li>Scoped to your use case + platform</li>
         </ul>
-        <a class="btn ghost small" href="mailto:newdiazmanne@gmail.com?subject=NTYDO%20Pro%20inquiry">EMAIL FOR PRO ↗</a>
+        <div class="paywall">
+          <p class="lock">[ LOCKED ] — PAYMENT REQUIRED FOR PRO ACCESS</p>
+          <p class="pay-opt">OPTION A — BANK TRANSFER (SPEI)</p>
+          <div class="term">
+            <div class="step payrow"><div class="cmd"><span class="k2">CLABE</span><code data-cmd="722969014699957830">722969014699957830</code></div><button type="button" class="copy">COPY</button></div>
+            <div class="step payrow"><div class="cmd"><span class="k2">BENEFICIARY</span><code data-cmd="Emmanuel Diaz Ortega">Emmanuel Diaz Ortega</code></div><button type="button" class="copy">COPY</button></div>
+            <div class="step payrow"><div class="cmd"><span class="k2">INSTITUTION</span><code data-cmd="Mercado Pago">Mercado Pago</code></div><button type="button" class="copy">COPY</button></div>
+          </div>
+          <p class="pay-opt">OPTION B — CRYPTO</p>
+          <div class="term">
+            <div class="step payrow"><div class="cmd"><span class="k2">WALLET ADDRESS</span><code data-cmd="AANn5R1pCC9orL4o9cfMucwptKyMC7erk7Goxr4WGFU5">AANn5R1pCC9orL4o9cfMucwptKyMC7erk7Goxr4WGFU5</code></div><button type="button" class="copy">COPY</button></div>
+          </div>
+          <button type="button" class="btn ghost small" id="paid-btn" aria-expanded="false" aria-controls="paid-note">I'VE PAID — NEXT STEPS</button>
+          <p id="paid-note" hidden>Keep your transfer receipt. The maintainer verifies each payment manually, then delivers Pro access and the licensing terms. Allow time for that manual check — it is deliberate, not a delay tactic.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <footer>
     <span>© 2026 Emmanuel Díaz Ortega — NTYDO, all rights reserved.<br>
-    Contact: <a href="mailto:newdiazmanne@gmail.com">newdiazmanne@gmail.com</a></span>
+    Pro is paid — bank transfer or crypto, <a href="#editions">payment details above ↑</a></span>
     <span><a href="https://github.com/newdiazmanne-x/ntydo" target="_blank" rel="noopener">github.com/newdiazmanne-x/ntydo ↗</a><br>
     <a href="https://newdiazmanne-x.github.io/ntydo/" target="_blank" rel="noopener">newdiazmanne-x.github.io/ntydo ↗</a></span>
   </footer>
@@ -498,6 +572,22 @@
     var cmds = [];
     panel.querySelectorAll("code[data-cmd]").forEach(function(c){ cmds.push(c.getAttribute("data-cmd")); });
     copyText(cmds.join("\n"), null);
+  });
+
+  /* ── copy the whole patch script ── */
+  document.getElementById("copy-patch").addEventListener("click", function(){
+    var cmds = [];
+    document.querySelectorAll('#patch code[data-cmd]').forEach(function(c){ cmds.push(c.getAttribute("data-cmd")); });
+    copyText(cmds.join("\n"), null);
+  });
+
+  /* ── paywall: i've-paid next steps ── */
+  var paidBtn = document.getElementById("paid-btn"), paidNote = document.getElementById("paid-note");
+  paidBtn.addEventListener("click", function(){
+    var open = paidNote.hidden;
+    paidNote.hidden = !open;
+    paidBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    paidBtn.textContent = open ? "HIDE NEXT STEPS" : "I'VE PAID — NEXT STEPS";
   });
 
   /* ── matrix rain (tiny, 2d canvas) ── */
