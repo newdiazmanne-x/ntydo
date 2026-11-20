@@ -1,4 +1,36 @@
-.DS_Store
-node_modules/
-*.log
+# Secrets, keys, and local environment files
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.mobileprovision
+id_ed25519*
+id_rsa*
+
+# Python / uv
+__pycache__/
+*.py[cod]
+.venv/
+dist/
+build/
+*.egg-info/
+
+# Web / Node / Mobile builds
+node_modules/
+.next/
+.expo/
+.gradle/
+local.properties
+*.apk
+*.aab
+*.ipa
+DerivedData/
+*.xcresult
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*~

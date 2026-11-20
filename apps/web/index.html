@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minimal Web App</title>
+</head>
+<body>
+  <main id="app">
+    <h1>Minimal Web App</h1>
+    <p id="status">Running</p>
+  </main>
+  <script>
+    document.getElementById("status").textContent = "Loaded at " + new Date().toISOString();
+  </script>
+</body>
+</html>
