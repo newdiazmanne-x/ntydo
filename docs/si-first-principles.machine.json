@@ -1,0 +1,42 @@
+{
+  "$schema": "https://ntydo.local/schemas/si-first-principles-v1.json",
+  "spec_version": "1.0.0",
+  "domain": "synthetic-intelligence-first-principles",
+  "runtime_constraints": {
+    "environment": "termux-android-aarch64",
+    "python_package_manager": "uv",
+    "python_build_backend": "hatchling.build",
+    "uv_link_mode": "copy",
+    "secret_storage": "~/.secrets/ (mode 0700 dir, mode 0600 files)",
+    "git_author_email_policy": "noreply-only"
+  },
+  "core_axioms": [
+    {
+      "id": "AX-01-DETERMINISTIC-BOUNDARY",
+      "rule": "Separate pure deterministic state/validation from probabilistic model inference."
+    },
+    {
+      "id": "AX-02-HUMAN-IN-THE-LOOP",
+      "rule": "Require explicit human confirmation before external side effects, network egress changes, or destructive writes."
+    },
+    {
+      "id": "AX-03-REPRODUCIBLE-ARTIFACT",
+      "rule": "Every run must declare inputs, model/version identifiers, build backend, and exit status."
+    },
+    {
+      "id": "AX-04-ZERO-SECRET-IN-REPO",
+      "rule": "Never write credentials, tokens, or raw keys into repository files or logs."
+    }
+  ],
+  "hitl_gates": [
+    "git_push_or_force_rewrite",
+    "network_or_tailscale_acl_change",
+    "sandbox_reset_or_file_deletion",
+    "model_weight_download_or_port_bind"
+  ],
+  "open_source_inference_stack": {
+    "serving_engines": ["ollama", "llama.cpp"],
+    "orchestration": ["uv", "python-3.13"],
+    "isolation": ["./scripts/nydo-sandbox.sh", "./scripts/uv-pipeline.sh"]
+  }
+}
