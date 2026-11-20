@@ -1,5 +1,7 @@
 """CLI entrypoint for si-router."""
 
+from __future__ import annotations
+
 import argparse
 import json
 import sys
@@ -19,6 +21,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Permit Tier 3 cloud/Google AI escalation when thresholds are met",
     )
+    parser.add_argument(
+        "--spec",
+        type=str,
+        default=None,
+        help="Optional path to auto-aware-computability.machine.json",
+    )
     return parser
 
 
@@ -29,6 +37,7 @@ def main(argv: list[str] | None = None) -> int:
         task_tokens=max(0, args.tokens),
         distributed_ranks=max(1, args.ranks),
         allow_cloud=args.allow_cloud,
+        spec_path=args.spec,
     )
     print(json.dumps(decision, indent=2))
     return 0
